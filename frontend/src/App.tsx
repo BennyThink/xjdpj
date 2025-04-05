@@ -9,7 +9,9 @@ import {
   Heading,
   Progress,
   VStack,
+  Clipboard,
   IconButton,
+  Link,
 } from "@chakra-ui/react";
 import { RiGithubLine } from "react-icons/ri";
 
@@ -19,8 +21,6 @@ import { Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Toaster, toaster } from "./components/ui/toaster";
-import { Code } from "@chakra-ui/react";
-import { LuMoon, LuSun } from "react-icons/lu";
 
 export default function Page() {
   const [files, setFiles] = useState<File[]>([]);
@@ -73,7 +73,16 @@ export default function Page() {
         <Heading size="2xl" letterSpacing="tight">
           新疆大盘鸡
         </Heading>
-        {link && <Code> {link}</Code>}
+        {link && (
+          <Clipboard.Root value="https://chakra-ui.com">
+            <Clipboard.Trigger asChild>
+              <Link as="span" color="blue.fg" textStyle="sm">
+                <Clipboard.Indicator />
+                <Clipboard.ValueText />
+              </Link>
+            </Clipboard.Trigger>
+          </Clipboard.Root>
+        )}
         <HStack gap="6" justify="center">
           <Field.Root required>
             <Input
