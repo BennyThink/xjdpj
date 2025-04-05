@@ -74,7 +74,7 @@ export default function Page() {
           新疆大盘鸡
         </Heading>
         {link && (
-          <Clipboard.Root value="https://chakra-ui.com">
+          <Clipboard.Root value={link}>
             <Clipboard.Trigger asChild>
               <Link as="span" color="blue.fg" textStyle="sm">
                 <Clipboard.Indicator />
