@@ -52,7 +52,7 @@ xjdpj 提供这样一个服务：
 
 ```bash
 git clone https://github.com/BennyThink/xjdpj
-cd xjdpj
+cd xjdpj/backend
 
 # 安装后端依赖
 pdm install
