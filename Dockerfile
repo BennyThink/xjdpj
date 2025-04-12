@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS pybuilder
+FROM python:3.12-alpine AS pybuilder
 RUN pip install -U pdm && pdm config python.use_venv false
 ADD backend/pyproject.toml backend/pdm.lock /build/
 WORKDIR /build
@@ -11,7 +11,7 @@ RUN npm install && npm run build
 
 
 
-FROM python:3.12-slim
+FROM python:3.12-alpine
 WORKDIR /app
 COPY --from=pybuilder /build/__pypackages__/3.12/bin /usr/local/bin/
 COPY --from=pybuilder /build/__pypackages__/3.12/lib /usr/local/lib/python3.12/
