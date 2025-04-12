@@ -128,7 +128,8 @@ async def cleanup():
 
 if __name__ == "__main__":
     logger.info("Running with key: %s", KEY)
-    if os.name == "nt":
-        app.run(host="127.0.0.1", port=44777, fast=True, access_log=True)
-    else:
+    # prod by default
+    if os.getenv("ENV") == "dev":
         app.run(host="127.0.0.1", port=44777, debug=True, dev=True, auto_reload=True, access_log=True)
+    else:
+        app.run(host="127.0.0.1", port=44777, fast=True, access_log=True)
