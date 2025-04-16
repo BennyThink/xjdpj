@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:a8fbea93540054322b78758a0b3c9171cb934703562caab8d97fc808ad6a2c5d"
+content_hash = "sha256:db75cd1c6a469c44c199b2877bc318657959288781c5245db01eebd3caf7c420"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
@@ -19,21 +19,6 @@ groups = ["default"]
 files = [
     {file = "aiofiles-24.1.0-py3-none-any.whl", hash = "sha256:b4ec55f4195e3eb5d7abd1bf7e061763e864dd4954231fb8539a0ef8bb8260e5"},
     {file = "aiofiles-24.1.0.tar.gz", hash = "sha256:22a075c9e5a3810f0c2e48f3008c94d68c65d763b9b03857924c99e57355166c"},
-]
-
-[[package]]
-name = "apscheduler"
-version = "3.11.0"
-requires_python = ">=3.8"
-summary = "In-process task scheduler with Cron-like capabilities"
-groups = ["default"]
-dependencies = [
-    "backports-zoneinfo; python_version < \"3.9\"",
-    "tzlocal>=3.0",
-]
-files = [
-    {file = "APScheduler-3.11.0-py3-none-any.whl", hash = "sha256:fc134ca32e50f5eadcc4938e3a4545ab19131435e851abb40b34d63d5141c6da"},
-    {file = "apscheduler-3.11.0.tar.gz", hash = "sha256:4c622d250b0955a65d5d0eb91c33e6d43fd879834bf541e0a18661ae60460133"},
 ]
 
 [[package]]
@@ -241,32 +226,6 @@ groups = ["default"]
 files = [
     {file = "typing_extensions-4.13.1-py3-none-any.whl", hash = "sha256:4b6cf02909eb5495cfbc3f6e8fd49217e6cc7944e145cdda8caa3734777f9e69"},
     {file = "typing_extensions-4.13.1.tar.gz", hash = "sha256:98795af00fb9640edec5b8e31fc647597b4691f099ad75f469a2616be1a76dff"},
-]
-
-[[package]]
-name = "tzdata"
-version = "2025.2"
-requires_python = ">=2"
-summary = "Provider of IANA time zone data"
-groups = ["default"]
-marker = "platform_system == \"Windows\""
-files = [
-    {file = "tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8"},
-    {file = "tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9"},
-]
-
-[[package]]
-name = "tzlocal"
-version = "5.3.1"
-requires_python = ">=3.9"
-summary = "tzinfo object for the local timezone"
-groups = ["default"]
-dependencies = [
-    "tzdata; platform_system == \"Windows\"",
-]
-files = [
-    {file = "tzlocal-5.3.1-py3-none-any.whl", hash = "sha256:eb1a66c3ef5847adf7a834f1be0800581b683b5608e74f86ecbcef8ab91bb85d"},
-    {file = "tzlocal-5.3.1.tar.gz", hash = "sha256:cceffc7edecefea1f595541dbd6e990cb1ea3d19bf01b2809f362a03dd7921fd"},
 ]
 
 [[package]]

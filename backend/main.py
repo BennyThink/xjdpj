@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
+import asyncio
 import os
 import pathlib
 import random
@@ -9,14 +10,12 @@ import time
 import uuid
 from urllib.parse import urlparse
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.interval import IntervalTrigger
 from sanic import Sanic
 from sanic.log import logger
 from sanic.request import Request
 from sanic.response import file, file_stream
 from sanic.response import json as json_response
-from sanic.response import raw, text
+from sanic.response import raw
 
 app = Sanic("XinJiangDaPanJi")
 app.config.REQUEST_MAX_SIZE = 1024 * 1024 * 1024 * 10
@@ -63,11 +62,6 @@ def generate_fake_text() -> bytes:
     return bait.encode("utf-8")
 
 
-app.static("/static", "../frontend/dist/static", name="static")
-app.static("/assets", "../frontend/dist/assets", name="assets")
-app.static("/favicon.ico", "../frontend/dist/favicon.ico", name="favicon")
-
-
 @app.route("/", methods=["GET"])
 async def index(request):
     index_path = SAVED_PATH.resolve().parent.parent.joinpath("frontend/dist/index.html")
@@ -109,21 +103,27 @@ async def upload(request: Request):
     return json_response({"link": f"{base_url}/{saved_name.as_posix()}"})
 
 
-@app.before_server_start
-async def start_scheduler(app, loop):
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(cleanup, IntervalTrigger(seconds=60))
-    scheduler.start()
-
-
 async def cleanup():
-    # 清理过期文件，超24小时就清理
-    for item in SAVED_PATH.glob("*"):
-        item: pathlib.Path  # 给 item 添加类型注解
-        logger.info("Checking %s", item)
-        if time.time() - item.stat().st_ctime > 2 * 24 * 3600:
-            logger.info("Cleaning up %s", item)
-            item.unlink()
+    while True:
+        await asyncio.sleep(60)
+        if app.m.name == "Sanic-Server-0-0":
+            for item in SAVED_PATH.glob("*"):
+                item: pathlib.Path  # 给 item 添加类型注解
+                logger.info("Checking %s", item)
+                if time.time() - item.stat().st_ctime > 2 * 24 * 3600:
+                    logger.info("Cleaning up %s", item)
+                    item.unlink()
+
+
+app.static("/static", "../frontend/dist/static", name="static")
+app.static("/assets", "../frontend/dist/assets", name="assets")
+app.static("/favicon.ico", "../frontend/dist/favicon.ico", name="favicon")
+
+
+@app.before_server_start
+async def setup(app, loop):
+    if app.m.name == "Sanic-Server-0-0":
+        app.add_task(cleanup())
 
 
 if __name__ == "__main__":
