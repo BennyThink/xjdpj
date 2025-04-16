@@ -9,7 +9,10 @@ updates:
     directory: "/frontend" # Location of package manifests
     schedule:
       interval: "weekly"
-
+    groups:
+      all-dependencies:
+        patterns: ["*"]
+        
   - package-ecosystem: "pip" # See documentation for possible values
     directory: "/backend" # Location of package manifests
     schedule:
