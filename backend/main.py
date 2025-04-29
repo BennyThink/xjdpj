@@ -71,6 +71,7 @@ async def index(request):
 @app.route("/saved/<filename:path>", methods=["GET"])
 async def download(request: Request, filename: str = ""):
     try:
+        # TODO: support range
         path = SAVED_PATH.joinpath(filename).resolve()
         if path.relative_to(SAVED_PATH.resolve()) and path.exists():
             # set content length so browsers knows progress
