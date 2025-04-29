@@ -11,6 +11,8 @@ import uuid
 from urllib.parse import urlparse
 
 from sanic import Sanic
+from sanic.exceptions import HeaderNotFound
+from sanic.handlers import ContentRangeHandler
 from sanic.log import logger
 from sanic.request import Request
 from sanic.response import file, file_stream
@@ -71,13 +73,15 @@ async def index(request):
 @app.route("/saved/<filename:path>", methods=["GET"])
 async def download(request: Request, filename: str = ""):
     try:
-        # TODO: support range
         path = SAVED_PATH.joinpath(filename).resolve()
-        if path.relative_to(SAVED_PATH.resolve()) and path.exists():
-            # set content length so browsers knows progress
-            return await file_stream(path, headers={"content-length": str(path.stat().st_size)})
-        else:
+        path.relative_to(SAVED_PATH.resolve())
+        if not path.exists():
             return json_response({"message": "File not found"}, status=404)
+        headers = {"content-length": str(path.stat().st_size)}
+        try:
+            return await file_stream(path, headers=headers, _range=(ContentRangeHandler(request, path.stat())))
+        except HeaderNotFound:
+            return await file_stream(path, headers=headers)
     except ValueError:
         return raw(generate_fake_text(), status=200)
 
