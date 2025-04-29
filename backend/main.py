@@ -73,7 +73,8 @@ async def download(request: Request, filename: str = ""):
     try:
         path = SAVED_PATH.joinpath(filename).resolve()
         if path.relative_to(SAVED_PATH.resolve()) and path.exists():
-            return await file_stream(path)
+            # set content length so browsers knows progress
+            return await file_stream(path, headers={"content-length": str(path.stat().st_size)})
         else:
             return json_response({"message": "File not found"}, status=404)
     except ValueError:
