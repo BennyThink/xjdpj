@@ -1,22 +1,22 @@
-FROM python:3.12-alpine AS pybuilder
-RUN pip install -U pdm && pdm config python.use_venv false
-ADD backend/pyproject.toml backend/pdm.lock /build/
-WORKDIR /build
-RUN pdm install --prod
-
-FROM node:20-alpine AS nodebuilder
-WORKDIR /build
-ADD frontend /build
-RUN npm install && npm run build
-
-
-
-FROM python:3.12-alpine
+FROM python:3.14-alpine AS pybuilder
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+ADD backend/pyproject.toml backend/uv.lock /app/
 WORKDIR /app
-COPY --from=pybuilder /build/__pypackages__/3.12/bin /usr/local/bin/
-COPY --from=pybuilder /build/__pypackages__/3.12/lib /usr/local/lib/python3.12/
+RUN uv sync --frozen --no-dev
 
-COPY --from=nodebuilder /build/dist /frontend/dist
+FROM node:24-alpine AS nodebuilder
+WORKDIR /app
+COPY frontend/package.json frontend/package-lock.json /app/
+RUN npm ci
+COPY frontend /app
+RUN npm run build
+
+
+FROM python:3.14-alpine
+WORKDIR /app
+COPY --from=pybuilder /app/.venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
+COPY --from=nodebuilder /app/dist /frontend/dist
 COPY backend /app
 WORKDIR /app
 
